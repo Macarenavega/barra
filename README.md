@@ -6,8 +6,8 @@ Mi cuaderno de entreno. Una app web personal para registrar series entre serie y
 
 ## Qué hace
 
-- **Hoy:** eliges qué sesión entrenas (tren superior A/B, tren inferior A/B), sin días fijos. Ves cada ejercicio con su objetivo y cuántas series llevas. Añadir una serie cuesta dos toques y sugiere lo que hiciste la última vez.
-- **Ejercicios:** los 19 ejercicios de la rutina del mes 2, con su progresión (por ejemplo, push up inclinado de 50 a 20 cm).
+- **Hoy:** la semana tipo v4 (Día 1 Piernas, Día 2 Dominadas, Día 3 Movilidad con fuerza, Día 4 Full body). Propone la sesión que toca o la siguiente por prioridad, la separa por bloques y, en el Día 3, el modo "Escalo hoy" deja solo los bloques B y D. Arriba, el check diario de hipopresivos con racha. Al completar todas las series en el tope del rango, avisa de subir carga. Añadir una serie cuesta dos toques y sugiere lo que hiciste la última vez.
+- **Ejercicios:** los de la semana tipo v4. La rutina del mes 2 queda archivada con su historial.
 - **Progreso:** la gráfica de la mejor serie de cada entreno; en los ejercicios con peso, sigue los kilos.
 - **Historial:** los entrenos por semana, con notas breves.
 
