@@ -269,6 +269,9 @@ h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:22px;color:va
 .sess-btn em .ic{width:15px;height:15px;stroke-width:2.8}
 .sess-btn.wk{background:var(--tint)}
 .sess-btn.sg{box-shadow:inset 0 0 0 2px var(--accent)}
+.mode-t{display:inline-flex;margin:8px 0 4px;padding:3px;border-radius:999px;background:var(--bg);gap:2px}
+.mode-t button{padding:7px 14px;border-radius:999px;font-weight:800;font-size:13px;color:var(--ink2)}
+.mode-t button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink)}
 .plan-list .blk{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-dark);padding:16px 2px 6px}
 .plan-list .blk:first-child{padding-top:2px}
 .cycle{margin:8px 0 0;font-size:13px;font-weight:800;color:var(--accent-dark)}
@@ -389,6 +392,21 @@ const EX=[
   {id:'flexorCadera',name:'Estiramiento de flexor de cadera',type:'time',side:true,mob:1,muscles:'Psoas · cuádriceps',cue:'Caderas cuadradas, sin rebotes. 6-8 reps y sostén 10-30".',vars:['Normal']},
   {id:'halfSplit',name:'Half split',type:'time',side:true,mob:1,muscles:'Isquios',cue:'Caderas cuadradas, sin rebotes.',vars:['Normal']},
   {id:'paloma',name:'Paloma elevada',type:'time',side:true,mob:1,muscles:'Glúteo · cadera',cue:'Pierna de delante sobre un banco, tronco erguido.',vars:['Normal']},
+  // ---- Modo kettlebell: solo una kettlebell de 24 kg, el suelo y una silla o sofá ----
+  {id:'kbGoblet',kb:1,name:'Sentadilla goblet con tempo',type:'reps',load:true,cap:24,muscles:'Cuádriceps · glúteo',cue:'En lugar de la Smith. Kettlebell pegada al pecho. Con 24 kg pesa mucho menos que la Smith: el tempo hace el trabajo.',vars:['Bajada 3" y pausa 2"','Bajada 4" y pausa 3"']},
+  {id:'kbBulgara',kb:1,name:'Zancada búlgara con kettlebell',type:'reps',load:true,side:true,cap:24,muscles:'Cuádriceps · glúteo',cue:'Pie de atrás en una silla o el sofá, kettlebell en el pecho. Baja recto.',vars:['Kettlebell en el pecho','Bajada lenta']},
+  {id:'kbRdl1',kb:1,name:'Peso muerto rumano a una pierna con kettlebell',type:'reps',load:true,side:true,cap:24,muscles:'Isquios · glúteo',cue:'En lugar del rumano con mancuernas. Kettlebell en la mano contraria a la pierna de apoyo, espalda recta, bajada de 3".',vars:['Mano en la pared','Sin apoyo']},
+  {id:'kbHip1',kb:1,name:'Hip thrust a una pierna con kettlebell',type:'reps',load:true,side:true,cap:24,muscles:'Glúteo',cue:'En lugar del hip thrust en Smith. Espalda alta en el sofá, kettlebell sobre la cadera con una toalla debajo. Pausa de 2" arriba.',vars:['A una pierna']},
+  {id:'kbHighPull',kb:1,name:'High pull a una mano',type:'reps',load:true,side:true,cap:24,muscles:'Dorsal · trapecio · cadera',cue:'En lugar de la dominada explosiva. Empieza con la cadera, como un swing corto, y tira con el codo hacia arriba y atrás. Si notas el sacro, haz remo explosivo con apoyo en la silla.',vars:['Desde el suelo','Remo explosivo con apoyo']},
+  {id:'kbCarry',kb:1,name:'Paseo del granjero a una mano',type:'time',load:true,side:true,cap:24,muscles:'Agarre · hombro · core',cue:'En lugar del agarre falso. Tronco recto sin inclinarte hacia la kettlebell, hombro activo.',vars:['Agarre del asa','Kettlebell boca abajo (bottoms-up)']},
+  {id:'kbPullover',kb:1,name:'Pullover con kettlebell',type:'reps',load:true,cap:24,muscles:'Dorsal · pecho',cue:'En lugar de la transición con banda. Tumbada boca arriba, rodillas dobladas. Baja la kettlebell por detrás de la cabeza con los brazos casi estirados y vuelve tirando con el dorsal.',vars:['En el suelo']},
+  {id:'kbRemoExc',kb:1,name:'Remo a una mano con bajada de 4"',type:'reps',load:true,side:true,cap:24,muscles:'Dorsal · bíceps',cue:'En lugar de la muscle-up negativa. Apoyo en una silla, sube rápido y baja en 4" con el codo pegado al cuerpo.',vars:['Bajada de 4"']},
+  {id:'kbRemoPesado',kb:1,name:'Remo pesado a una mano',type:'reps',load:true,side:true,cap:24,muscles:'Dorsal · bíceps',cue:'En lugar de la dominada con lastre. Pausa de 2" arriba. En el tope de 24 kg: más pausa o bajada más lenta.',vars:['Pausa de 2" arriba']},
+  {id:'kbHollow',kb:1,name:'Pullover en hollow body',type:'reps',load:true,cap:24,muscles:'Core · dorsal',cue:'En lugar del front lever. Posición de hollow con la espalda baja pegada al suelo; la kettlebell baja lenta por detrás de la cabeza sin que se despegue la lumbar.',vars:['Rodillas dobladas','Piernas estiradas']},
+  {id:'kbPress',kb:1,name:'Press militar a una mano con kettlebell',type:'reps',load:true,side:true,cap:24,muscles:'Hombro · tríceps',cue:'En lugar del press con mancuernas. De pie, glúteo y abdomen apretados, sin arquear la zona lumbar.',vars:['De pie']},
+  {id:'kbCurl',kb:1,name:'Curl femoral con toalla deslizante',type:'reps',side:true,muscles:'Isquios · glúteo',cue:'En lugar del curl en fitball. Boca arriba, talón sobre una toalla en suelo liso, cadera arriba; arrastra el talón hacia el glúteo sin bajar la cadera.',vars:['Dos piernas','Una pierna']},
+  {id:'kbBuenos',kb:1,name:'Buenos días, halo y superman',type:'reps',load:true,cap:24,muscles:'Lumbar · glúteo · hombro',cue:'En lugar de la silla romana. Buenos días con la kettlebell en el pecho (flexión/extensión), halo alrededor de la cabeza (rotacional) y superman sostenido 20-30" (isométrico).',vars:['Buenos días','Halo','Superman isométrico (s)']},
+  {id:'kbPullThrough',kb:1,name:'Plancha con arrastre de kettlebell',type:'reps',side:true,muscles:'Core · oblicuos',cue:'En lugar de la rotación con banda. En plancha alta, pasa la kettlebell de un lado al otro por debajo del cuerpo sin girar la cadera.',vars:['Plancha alta']},
 ];
 const EXM=Object.fromEntries(EX.map(e=>[e.id,e]));
 
@@ -402,7 +420,7 @@ const PLAN={
     ['rdl',0,4,'8-10',90,'Bajada de 3"','Fuerza'],['hipThrust',0,3,'8-10',90,'Pausa de 2" arriba','Fuerza'],
     ['pantorrilla',3,3,'12-15 por pierna',45,'Pausa de 1-2" arriba','Fuerza'],
     ['halfSplit',0,2,'30" por lado',0,'','Final'],['paloma',0,2,'30" por lado',0,'','Final']]},
-  d2:{name:'Día 2 · Dominadas',short:'Dominadas',dow:2,mins:'~59',items:[...PRE_BARRA,
+  d2:{name:'Día 2 · Dominadas',kbName:'Día 2 · Tirón con kettlebell',short:'Dominadas',dow:2,mins:'~59',items:[...PRE_BARRA,
     ['domExp',0,4,'4-6',120,'Subida rápida, bajada controlada','Barra'],['agarreFalso',0,3,'15-20"',60,'','Barra'],
     ['transicion',0,4,'5',90,'Codos hacia atrás','Barra'],['muNeg',0,3,'3-5',120,'Bajada lenta, codos pegados','Barra'],
     ['domLastre',0,4,'6-8',120,'','Barra'],['frontLever',0,4,'1 por lado',90,'1 izq + 1 der','Barra']]},
@@ -420,6 +438,28 @@ const PLAN={
     ['curlFitball',0,2,'8-10 por pierna',60,'','Fuerza'],['sillaRomana',0,2,'8-10 por variante',60,'Isométrico: 20-30"','Fuerza'],['rotBanda',0,2,'12 por lado',45,'Resiste la rotación','Fuerza']]},
 };
 const PRIO=['d1','d2','d4','d3'];
+// Modo kettlebell: qué cambia por qué. Mantiene las series de la sesión salvo que se indique otra cosa
+const KB_ALT={
+  smith:{to:'kbGoblet',reps:'8-10',rest:120,note:'Tempo: bajada 3" y pausa 2"'},
+  bulgara:{to:'kbBulgara'},
+  rdl:{to:'kbRdl1',reps:'8-10 por pierna',note:'Bajada de 3"'},
+  hipThrust:{to:'kbHip1',reps:'8-10 por pierna',note:'Pausa de 2" arriba'},
+  domExp:{to:'kbHighPull',reps:'5 por lado',note:'Rápido arriba, controlado abajo'},
+  agarreFalso:{to:'kbCarry',reps:'30-40" por lado'},
+  transicion:{to:'kbPullover',reps:'8-10',note:''},
+  muNeg:{to:'kbRemoExc',reps:'5 por lado',note:'Codo pegado al cuerpo'},
+  domLastre:{to:'kbRemoPesado',reps:'6-8 por lado',note:'Pausa de 2" arriba'},
+  frontLever:{to:'kbHollow',reps:'6 lentas',note:'Lumbar pegada al suelo'},
+  pressMilitar:{to:'kbPress',reps:'8 por lado'},
+  curlFitball:{to:'kbCurl'},
+  sillaRomana:{to:'kbBuenos'},
+  rotBanda:{to:'kbPullThrough',note:'Sin girar la cadera'},
+};
+const isKb=()=>db.mode==='kb';
+const toKb=it=>{const a=KB_ALT[it[0]];if(!a)return it;
+  return [a.to,0,a.sets??it[2],a.reps??it[3],a.rest??it[4],a.note??it[5],it[6]==='Barra'?'Kettlebell':it[6]]};
+// Ejercicios que no se usan en el modo actual (el equivalente del otro modo)
+const hiddenIds=()=>new Set(isKb()?Object.keys(KB_ALT):Object.values(KB_ALT).map(a=>a.to));
 // Ciclo de piernas de 5 semanas, empezando el lunes 16 nov 2026
 const CICLO0='2026-11-16';
 const cicloWeek=()=>((Math.floor(daysBetween(CICLO0,todayISO())/7)%5)+5)%5+1;
@@ -437,7 +477,10 @@ const IMG={pushInc:'push-up-inclinado',pushRod:'push-up-rodillas',remoPolea:'rem
   zancadaIso:'zancada-iso',sissy:'sissy-iso',isoMax:'iso-unilateral',shinbox:'shinbox',sentIsq:'sentadilla-isquios',mariposa:'mariposa',
   squatRocks:'squat-rocks',cosaca:'cosaca',zancRot:'zancada-rotacion',hombrosMun:'hombros-munecas',arco:'arco',cobra:'cobra',lateral:'lateral-cruzado',
   bebeFeliz:'bebe-feliz',mesaInv:'mesa-invertida',remosLibres:'remos-libres',flexRot:'flexion-rotacion',almohada:'almohada',flexorCadera:'flexor-cadera',
-  halfSplit:'half-split',paloma:'paloma'};
+  halfSplit:'half-split',paloma:'paloma',
+  kbGoblet:'sentadilla-goblet',kbBulgara:'bulgara',kbRdl1:'peso-muerto-una-pierna',kbHip1:'puente-gluteo',kbPress:'press-militar',
+  kbRemoExc:'remo-mancuerna',kbRemoPesado:'remo-mancuerna',kbHighPull:'kb-high-pull',kbCarry:'kb-carry',kbPullover:'kb-pullover',
+  kbHollow:'kb-hollow-pullover',kbCurl:'kb-curl-toalla',kbBuenos:'kb-buenos-dias',kbPullThrough:'kb-pull-through'};
 const NOIMG=new Set();
 function art(id,v=curVariant(id)){
   const f=IMG[id],e=EXM[id],alt=`${e.name}: ${e.vars[v]||e.vars[0]}`;
@@ -534,23 +577,24 @@ function suggested(){
   if(fixed&&!(lastSess(fixed)>=mon)) return fixed;
   return PRIO.find(k=>!(lastSess(k)>=mon))||null;
 }
-const planItems=(k,w)=>PLAN[k].climb&&w?.climb?PLAN[k].items.filter(i=>/^[BD] /.test(i[6])):PLAN[k].items;
+const planItems=(k,w)=>{const it=PLAN[k].climb&&w?.climb?PLAN[k].items.filter(i=>/^[BD] /.test(i[6])):PLAN[k].items;return isKb()?it.map(toKb):it};
 function vPlan(sets){
   const k=sessKey(),w=todayW();
   if(!k){
     const mon=monday(todayISO()),sg=suggested(),dow=D(todayISO()).getDay(),rest=!Object.values(PLAN).some(p=>p.dow===dow);
     return `<section class="card group plan has-climber">${CLAY('dominada','Personaje en dominada','climber')}
-      <p class="eyebrow">Elige la sesión</p><h2>${rest?(dow===6?'Hoy toca descanso o escalada':'Hoy toca descanso'):'¿Qué entrenas hoy?'}</h2>
+      <p class="eyebrow">Elige la sesión</p><div class="mode-t" role="group" aria-label="Material"><button data-act="mode" data-v="bar" aria-pressed="${!isKb()}">Barra</button><button data-act="mode" data-v="kb" aria-pressed="${isKb()}">Kettlebell</button></div><h2>${rest?(dow===6?'Hoy toca descanso o escalada':'Hoy toca descanso'):'¿Qué entrenas hoy?'}</h2>
       <div class="sess-grid">${Object.entries(PLAN).map(([key,p])=>{const l=lastSess(key),wk=l&&l>=mon;
-        return `<button class="sess-btn${wk?' wk':''}${key===sg?' sg':''}" data-act="sess" data-v="${key}"><b>${p.name}</b><small>${DIAL[p.dow]} · ${p.mins} min</small>
+        return `<button class="sess-btn${wk?' wk':''}${key===sg?' sg':''}" data-act="sess" data-v="${key}"><b>${isKb()&&p.kbName||p.name}</b><small>${DIAL[p.dow]} · ${p.mins} min</small>
           <em>${wk?`${ic('check')}Hecha esta semana`:key===sg?(p.dow===dow?'Toca hoy':'La siguiente en prioridad'):l?`Última: ${fShort(l)}`:'Aún sin hacer'}</em></button>`}).join('')}</div>
       <p class="warm">Si un día se cae, el orden de prioridad es Día 1, Día 2, Día 4, Día 3. Escalada: jueves ligera (técnica) y sábado, el mejor día.</p></section>`;
   }
   const p=PLAN[k],items=planItems(k,w);let blk=null;
   const cw=cicloWeek();
   return `<section class="card group plan has-climber">${CLAY('dominada','Personaje en dominada','climber')}
-    <div class="plan-h"><div><p class="eyebrow">Sesión de hoy · ${p.mins} min</p><h2>${p.name}</h2></div>
+    <div class="plan-h"><div><p class="eyebrow">Sesión de hoy · ${p.mins} min</p><h2>${isKb()&&p.kbName||p.name}</h2></div>
       <button class="mini" data-act="sess" data-v="">Cambiar</button></div>
+    <div class="mode-t" role="group" aria-label="Material"><button data-act="mode" data-v="bar" aria-pressed="${!isKb()}">Barra</button><button data-act="mode" data-v="kb" aria-pressed="${isKb()}">Kettlebell</button></div>
     ${k==='d1'?`<p class="cycle num">Semana ${cw} de 5 · ${CICLO_TXT[cw-1]}</p>`:''}
     ${p.climb?`<button class="climb-t" data-act="climb" aria-pressed="${!!w?.climb}">${w?.climb?ic('check'):''}Escalo hoy: solo bloques B y D</button>`:''}
     <ol class="plan-list">${items.map(([id,v,n,reps,rest,note,b])=>{
@@ -604,8 +648,8 @@ function vHoy(){
 }
 const metaTags=e=>[e.type==='time'?'Isométrico · segundos':e.type==='min'?'Minutos':'Repeticiones',e.load&&'Con peso',e.side&&'Por lado'].filter(Boolean);
 function vEjercicios(){
-  const act=EX.filter(e=>!e.old);
-  return `<section class="head"><p class="eyebrow">${act.length} ejercicios de la semana tipo v4</p><h1 class="display">Ejercicios</h1></section>
+  const hid=hiddenIds(),act=EX.filter(e=>!e.old&&!hid.has(e.id));
+  return `<section class="head"><p class="eyebrow">${act.length} ejercicios de la semana tipo v4 · ${isKb()?'con kettlebell':'con barra'}</p><h1 class="display">Ejercicios</h1></section>
   <section class="grid">${act.map(e=>{const lf=lastFor(e.id,'9999'),b=lf&&best(lf.sets);return `<button class="card ex-card" data-act="ex" data-ex="${e.id}">
     <div class="pic">${art(e.id)}</div><div><h3>${e.name}</h3><p class="num">${e.vars.length>1?e.vars[curVariant(e.id)]:metaTags(e).slice(-1)[0]}${b?` · ${b.val} ${unit(e.id,b.val)}${b.kg!=null?` · ${b.kg} kg`:''}`:''}</p></div></button>`}).join('')}</section>`;
 }
@@ -633,7 +677,7 @@ function vProgreso(){
   const e=EXM[ui.pex],pts=series(e.id),kg=usesKg(pts);
   const m=p=>kg?p.kg:p.val,mu=p=>kg?'kg':unit(e.id,p.val);
   let h=`<section class="head">${I3('chart')}<p class="eyebrow">Mejor serie de cada entreno</p><h1 class="display">Progreso</h1></section>
-    <div class="chips" role="group" aria-label="Ejercicio">${EX.filter(x=>!x.old||series(x.id).length).map(x=>`<button class="chip" data-act="pex" data-ex="${x.id}" aria-pressed="${x.id===e.id}">${x.name}</button>`).join('')}</div>`;
+    <div class="chips" role="group" aria-label="Ejercicio">${EX.filter(x=>series(x.id).length||(!x.old&&!hiddenIds().has(x.id))).map(x=>`<button class="chip" data-act="pex" data-ex="${x.id}" aria-pressed="${x.id===e.id}">${x.name}</button>`).join('')}</div>`;
   if(pts.length<2) return h+`<section class="card empty">${pts.length?`<p><b>Punto de partida: ${pts[0].val} ${unit(e.id,pts[0].val)}${pts[0].kg!=null?` con ${pts[0].kg} kg`:''}</b>${fLong(pts[0].date)}</p>`:''}<p>Con dos entrenos de ${e.name.toLowerCase()} ya verás la gráfica.</p></section>`;
   const a=pts[0],z=pts.at(-1);
   if(ui.pt==null||ui.pt>=pts.length) ui.pt=pts.length-1;
@@ -720,7 +764,7 @@ function closeSheet(){stopTimer();ui.sheet=null;const sh=document.getElementById
 function renderSheet(){
   const S=ui.sheet,e=EXM[S.ex],w=todayW(),lf=lastFor(S.ex),time=e.type==='time',pi=planItem(S.ex);
   const sess=sessKey()?planItems(sessKey(),w).map(i=>i[0]):[];
-  const order=[...new Set([...sess,...(w?w.sets.map(s=>s.ex):[]),...EX.filter(x=>!x.old).map(x=>x.id)])];
+  const hid=hiddenIds(),order=[...new Set([...sess,...(w?w.sets.map(s=>s.ex):[]),...EX.filter(x=>!x.old&&!hid.has(x.id)).map(x=>x.id)])];
   const target=lf?best(lf.sets).val:null,lbl=(e.u||{reps:'repeticiones',time:'segundos',min:'minutos'}[e.type])+(e.side&&e.type!=='min'?' por lado':'');
   document.getElementById('panel').innerHTML=`<div class="grab"></div>
     ${S.edit==null?`<div class="chips" role="group" aria-label="Ejercicio">${order.map(id=>`<button class="chip" data-act="pick" data-ex="${id}" aria-pressed="${id===S.ex}">${EXM[id].name}</button>`).join('')}</div>`
@@ -773,6 +817,7 @@ document.addEventListener('click',ev=>{
     case 'pex': ui.pex=el.dataset.ex;ui.pt=null;render();break;
     case 'pt': ui.pt=+el.dataset.i;render();break;
     case 'sess':{const w=ensureToday();w.sess=el.dataset.v||null;save();render();break}
+    case 'mode':{db.mode=el.dataset.v==='kb'?'kb':'bar';save();render();toast(db.mode==='kb'?'Modo kettlebell':'Modo barra');break}
     case 'climb':{const w=ensureToday();w.climb=!w.climb;save();render();break}
     case 'hipo':{db.hipo=db.hipo||[];const t=todayISO(),i=db.hipo.indexOf(t);if(i<0){db.hipo.push(t);cheer();toast('Hipopresivos hechos')}else db.hipo.splice(i,1);save();render();break}
     case 'add': openSheet(el.dataset.ex,null,el.dataset.v!=null?+el.dataset.v:null);break;

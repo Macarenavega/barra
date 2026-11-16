@@ -7,6 +7,7 @@ Mi cuaderno de entreno. Una app web personal para registrar series entre serie y
 ## Qué hace
 
 - **Hoy:** la semana tipo v4 (Día 1 Piernas, Día 2 Dominadas, Día 3 Movilidad con fuerza, Día 4 Full body). Propone la sesión que toca o la siguiente por prioridad, la separa por bloques y, en el Día 3, el modo "Escalo hoy" deja solo los bloques B y D. Arriba, el check diario de hipopresivos con racha. Al completar todas las series en el tope del rango, avisa de subir carga. Añadir una serie cuesta dos toques y sugiere lo que hiciste la última vez.
+- **Barra / Kettlebell:** un selector en Hoy cambia los ejercicios que piden barra, máquina Smith, mancuernas, fitball, banda o silla romana por equivalentes con una sola kettlebell de 24 kg. Se guarda en cada móvil, así que cada persona entrena en su modo.
 - **Ejercicios:** los de la semana tipo v4. La rutina del mes 2 queda archivada con su historial.
 - **Progreso:** la gráfica de la mejor serie de cada entreno; en los ejercicios con peso, sigue los kilos.
 - **Historial:** los entrenos por semana, con notas breves.
