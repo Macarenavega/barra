@@ -441,7 +441,7 @@ const IMG={pushInc:'push-up-inclinado',pushRod:'push-up-rodillas',remoPolea:'rem
 const NOIMG=new Set();
 function art(id,v=curVariant(id)){
   const f=IMG[id],e=EXM[id],alt=`${e.name}: ${e.vars[v]||e.vars[0]}`;
-  return `<span class="art" data-label="${e.name}">${NOIMG.has(f)?'':`<img src="ex/${f}-a.webp" alt="${alt}" data-img="${f}">${e.mob?'':`<img class="peak" src="ex/${f}-b.webp" alt="" data-img="${f}">`}`}</span>`;
+  return `<span class="art" data-label="${e.name}">${NOIMG.has(f)?'':`<img src="ex/${f}-a.webp" alt="${alt}" data-img="${f}"><img class="peak" src="ex/${f}-b.webp" alt="" data-img="${f}">`}</span>`;
 }
 
 // ---------- Punto de partida v4: marcas hasta el 23 de octubre ----------
