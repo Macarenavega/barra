@@ -503,7 +503,8 @@ if(['hoy','ejercicios','progreso','historial'].includes(hashView)) ui.view=hashV
 
 const todayW=()=>db.workouts.find(w=>w.date===todayISO());
 const ensureToday=()=>{let w=todayW();if(!w){w={date:todayISO(),note:'',sets:[]};db.workouts.push(w);db.workouts.sort((a,b)=>a.date<b.date?-1:1)}return w};
-const sessKey=()=>todayW()?.sess||null;
+// Una sesión de la rutina anterior (supA, infB…) ya no existe en el plan: se trata como sin elegir
+const sessKey=()=>{const k=todayW()?.sess;return k&&PLAN[k]?k:null};
 const planItem=id=>{const k=sessKey();return k?planItems(k,todayW()).find(i=>i[0]===id):null};
 function unit(id,n){
   const e=EXM[id],u=e.u?e.u:e.type==='time'?'s':e.type==='min'?'min':(n==1?'rep':'reps');
@@ -685,7 +686,10 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 
 function render(){
   const tab=ui.view==='ex'?'ejercicios':ui.view;
-  document.getElementById('view').innerHTML=({hoy:vHoy,ejercicios:vEjercicios,ex:vEjercicio,progreso:vProgreso,historial:vHistorial})[ui.view]();
+  let html;
+  try{html=({hoy:vHoy,ejercicios:vEjercicios,ex:vEjercicio,progreso:vProgreso,historial:vHistorial})[ui.view]()}
+  catch(err){console.error(err);html=`<section class="card"><h2>Algo ha fallado al mostrar esta pantalla</h2><p class="warm">${esc(err.message)}</p><button class="mini" data-act="tab" data-v="historial">Ir al historial</button></section>`}
+  document.getElementById('view').innerHTML=html;
   document.getElementById('tabs').innerHTML=[['hoy','Hoy'],['ejercicios','Ejercicios'],['progreso','Progreso'],['historial','Historial']]
     .map(([k,l])=>`<button class="tab" data-act="tab" data-v="${k}" ${k===tab?'aria-current="page"':''}>${ic(k)}${l}</button>`).join('');
   document.getElementById('fabWrap').hidden=!(ui.view==='hoy');
