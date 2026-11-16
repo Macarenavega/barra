@@ -90,7 +90,8 @@ h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:22px;color:va
 .art{position:relative;display:block;width:100%;aspect-ratio:1;max-width:100%;overflow:hidden;border-radius:inherit;background:var(--tint)}
 .art img{position:absolute;inset:6%;width:88%;height:88%;object-fit:contain}
 /* Corte seco entre fotogramas: nunca hay dos visibles a la vez (los PNG transparentes se transparentarían) */
-.art img:first-child{animation:frame-a 2.4s steps(1,end) infinite}
+/* solo alterna si hay segundo fotograma; con uno solo, la imagen queda fija */
+.art img:first-child:not(:only-child){animation:frame-a 2.4s steps(1,end) infinite}
 .art .peak{opacity:0;animation:frame-b 2.4s steps(1,end) infinite}
 @keyframes frame-a{0%{opacity:1}50%{opacity:0}}
 @keyframes frame-b{0%{opacity:0}50%{opacity:1}}
