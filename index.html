@@ -172,12 +172,16 @@ h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:22px;color:va
 .sheet.on{visibility:visible}
 .backdrop{position:absolute;inset:0;background:color-mix(in srgb,var(--ink) 30%,transparent);opacity:0;transition:opacity .2s}
 .sheet.on .backdrop{opacity:1}
-.panel{position:absolute;bottom:0;left:50%;width:min(440px,100%);max-height:92vh;overflow-y:auto;background:var(--surface);border-radius:30px 30px 0 0;
+.panel{position:absolute;bottom:0;left:50%;width:min(440px,100%);max-height:86vh;max-height:86dvh;overflow-y:auto;background:var(--surface);border-radius:30px 30px 0 0;
   transform:translate(-50%,100%);transition:transform .3s cubic-bezier(.2,.9,.25,1.05);
   padding:12px max(18px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px));
   display:flex;flex-direction:column;gap:20px}
 .sheet.on .panel{transform:translate(-50%,0)}
 .grab{width:44px;height:5px;border-radius:9px;background:var(--line);margin:0 auto}
+/* Cabecera fija del formulario con botón de cerrar, visible aunque el formulario ocupe toda la pantalla */
+.sheet-top{position:sticky;top:-12px;z-index:2;display:flex;align-items:center;justify-content:center;min-height:48px;margin:-12px -18px -12px;padding:8px 18px 0;border-radius:30px 30px 0 0;background:var(--surface)}
+.sheet-x{position:absolute;right:14px;top:8px;width:40px;height:40px;border-radius:999px;background:var(--bg);display:grid;place-items:center;color:var(--ink)}
+.sheet-x .ic{width:20px;height:20px;stroke-width:2.6}
 .hint{margin:0;font-size:14px;color:var(--ink2);background:var(--bg);border-radius:18px;padding:12px 14px}
 .hint b{color:var(--ink)}
 .seg{display:flex;flex-wrap:wrap;gap:8px}
@@ -317,6 +321,7 @@ h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:22px;color:va
 
 // ---------- Iconos (trazo propio, estilo duotono) ----------
 const ICON={
+  x:'<path d="M6 6l12 12M18 6L6 18"/>',
   hoy:'<rect class="fill" x="5" y="6" width="4" height="12" rx="1.2"/><rect class="fill" x="15" y="6" width="4" height="12" rx="1.2"/><path d="M2.5 10v4M21.5 10v4M9 12h6"/><rect x="5" y="6" width="4" height="12" rx="1.2"/><rect x="15" y="6" width="4" height="12" rx="1.2"/>',
   ejercicios:'<rect class="fill" x="4" y="4" width="7" height="7" rx="2"/><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/>',
   progreso:'<path class="fill" d="M3 18l6-6 4 3 8-8v13H3z"/><path d="M3 18l6-6 4 3 8-8"/><path d="M15 7h6v6"/>',
@@ -775,7 +780,7 @@ function renderSheet(){
   const sess=sessKey()?planItems(sessKey(),w).map(i=>i[0]):[];
   const hid=hiddenIds(),order=[...new Set([...sess,...(w?w.sets.map(s=>s.ex):[]),...EX.filter(x=>!x.old&&!hid.has(x.id)).map(x=>x.id)])];
   const target=lf?best(lf.sets).val:null,lbl=(e.u||{reps:'repeticiones',time:'segundos',min:'minutos'}[e.type])+(e.side&&e.type!=='min'?' por lado':'');
-  document.getElementById('panel').innerHTML=`<div class="grab"></div>
+  document.getElementById('panel').innerHTML=`<div class="sheet-top"><div class="grab"></div><button class="sheet-x" data-act="close" aria-label="Cerrar">${ic('x')}</button></div>
     ${S.edit==null?`<div class="chips" role="group" aria-label="Ejercicio">${order.map(id=>`<button class="chip" data-act="pick" data-ex="${id}" aria-pressed="${id===S.ex}">${EXM[id].name}</button>`).join('')}</div>`
       :`<h2>Editar serie · ${e.name}</h2>`}
     <p class="hint num">${pi?`Objetivo hoy: <b>${pi[2]} × ${pi[3]}</b>${pi[4]?` · descanso ${restTxt(pi[4])}`:''}<br>`:''}${lf?`La última vez (${fShort(lf.w.date)}): <b>${setsLine(lf.sets)}</b> · ${e.vars[best(lf.sets).v]}`:'Primera vez con este ejercicio.'}</p>
