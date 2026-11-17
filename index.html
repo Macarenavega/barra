@@ -241,12 +241,17 @@ h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:22px;color:va
   42%{transform:translateY(-8px)}54%{transform:translateY(0)}80%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-14px)}}
 /* Sesión del día */
 .plan-list{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column}
-.pl{width:100%;display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;padding:10px 2px;border-top:1.5px solid var(--line);text-align:left;border-radius:14px}
+.pl{width:100%;display:grid;grid-template-columns:48px 1fr;gap:12px;align-items:center;padding:10px 2px;border-top:1.5px solid var(--line);text-align:left;border-radius:14px}
 .thumb.sm{width:48px;height:48px;border-radius:14px}
 .pl-t{display:flex;flex-direction:column;gap:2px;min-width:0}
 .pl-t b{font-family:var(--f-display);font-weight:600;font-size:16.5px}
 .pl-t small{font-size:13px;color:var(--ink2);font-weight:600}
 .pl-t em{font-size:12.5px;color:var(--muted);font-style:normal}
+.ticks{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.tk{width:38px;height:38px;border-radius:12px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--accent);display:grid;place-items:center;cursor:pointer;transition:transform .1s}
+.tk:active{transform:scale(.9)}
+.tk.on{background:var(--accent);color:var(--accent-ink);box-shadow:none}
+.tk .ic{width:20px;height:20px;stroke-width:3}
 .pl-c{font-size:13px;font-weight:800;min-width:40px;height:30px;padding:0 10px;border-radius:999px;background:var(--bg);display:grid;place-items:center;white-space:nowrap}
 .pl-c .ic{width:16px;height:16px;stroke-width:2.8}
 .pl-c[data-act=quick]{min-width:64px;height:40px;gap:4px;display:flex;align-items:center;justify-content:center;background:var(--tint);color:var(--accent-dark);box-shadow:inset 0 0 0 1.5px var(--accent);cursor:pointer}
@@ -616,9 +621,11 @@ function vPlan(sets){
       const head=b&&b!==blk?`<li class="blk">${blk=b}</li>`:'';
       return `${head}<li><button class="pl${done>=n?' done':''}" data-act="add" data-ex="${id}" data-v="${v}">
         <span class="thumb sm">${art(id,v)}</span>
-        <span class="pl-t"><b>${e.name}</b><small class="num">${n} × ${reps}${e.vars.length>1?` · ${e.vars[v]}`:''}${rest?` · ${restTxt(rest)}`:''}</small>${note?`<em>${note}</em>`:''}</span>
-        <span class="pl-c num"${done<n?` data-act="quick" data-ex="${id}" data-v="${v}" role="button" aria-label="Anotar una serie de ${e.name} sin abrir el formulario"`:''}>${done>=n?ic('check'):`${ic('check')}${done}/${n}`}</span></button></li>`}).join('')}</ol>
-    <p class="warm">Toca el contador para anotar la serie de un toque, con los mismos valores que la anterior. Toca el ejercicio para cambiarlos.</p>
+        <span class="pl-t"><b>${e.name}</b><small class="num">${n} × ${reps}${e.vars.length>1?` · ${e.vars[v]}`:''}${rest?` · ${restTxt(rest)}`:''}</small>${note?`<em>${note}</em>`:''}
+          <span class="ticks" role="group" aria-label="Series de ${e.name}">${Array.from({length:Math.max(n,done)},(_,i)=>i<done
+            ?`<span class="tk on" data-act="untick" data-ex="${id}" role="button" aria-label="Serie ${i+1} hecha. Tocar para desmarcar la última">${ic('check')}</span>`
+            :`<span class="tk" data-act="quick" data-ex="${id}" data-v="${v}" role="button" aria-label="Marcar la serie ${i+1} como hecha"></span>`).join('')}</span></span></button></li>`}).join('')}</ol>
+    <p class="warm">Marca cada casilla al terminar la serie: se anota con los mismos valores que la anterior. Toca el nombre del ejercicio para cambiar repeticiones o peso.</p>
     <p class="warm">Hipopresivos en ayunas al levantarte. Estiramientos largos después de la fuerza, no antes.</p></section>`;
 }
 // ---------- Hipopresivos diarios ----------
@@ -832,6 +839,9 @@ document.addEventListener('click',ev=>{
     case 'pt': ui.pt=+el.dataset.i;render();break;
     case 'sess':{const w=ensureToday();w.sess=el.dataset.v||null;save();render();break}
     case 'mode':{db.mode=el.dataset.v==='kb'?'kb':'bar';save();render();toast(db.mode==='kb'?'Modo kettlebell':'Modo barra');break}
+    case 'untick':{const id=el.dataset.ex,w=todayW();if(!w)break;
+      let i=-1;w.sets.forEach((s,j)=>{if(s.ex===id)i=j});if(i<0)break;
+      w.sets.splice(i,1);ui.fresh=null;save();render();toast('Serie desmarcada');break}
     case 'quick':{ // anota una serie sin abrir el formulario
       const id=el.dataset.ex,w=ensureToday(),prev=w.sets.filter(s=>s.ex===id).at(-1),pi=planItem(id);
       let set;
@@ -840,12 +850,12 @@ document.addEventListener('click',ev=>{
         set={ex:id,v:pf.v,val:lf?pf.val:(n0||pf.val),kg:pf.kg,rpe:null}}
       w.sets.push(set);ui.fresh=w.sets.length-1;save();render();
       const e=EXM[id],n=w.sets.filter(s=>s.ex===id).length,pm=progMsg(id);
-      toast(pm||`Serie ${n} de ${e.name.toLowerCase()}: ${set.val} ${unit(id,set.val)}${set.kg?` · ${set.kg} kg`:''}`,pm?4200:1800);cheer();break}
+      toast(pm||`Serie ${n} de ${e.name.toLowerCase()}: ${set.val} ${unit(id,set.val)}${set.kg?` · ${set.kg} kg`:''}`,pm?4200:1800);if(pi&&n===pi[2])cheer();break}
     case 'climb':{const w=ensureToday();w.climb=!w.climb;save();render();break}
     case 'hipo':{db.hipo=db.hipo||[];const t=todayISO(),i=db.hipo.indexOf(t);if(i<0){db.hipo.push(t);cheer();toast('Hipopresivos hechos')}else db.hipo.splice(i,1);save();render();break}
     case 'add': openSheet(el.dataset.ex,null,el.dataset.v!=null?+el.dataset.v:null);break;
     case 'edit': openSheet(null,+el.dataset.i);break;
-    case 'repeat':{const w=todayW(),l=w.sets.filter(s=>s.ex===el.dataset.ex).at(-1);w.sets.push({...l});cheer();ui.fresh=w.sets.length-1;save();render();
+    case 'repeat':{const w=todayW(),l=w.sets.filter(s=>s.ex===el.dataset.ex).at(-1);w.sets.push({...l});{const pi=planItem(l.ex);if(pi&&w.sets.filter(s=>s.ex===l.ex).length===pi[2])cheer()}ui.fresh=w.sets.length-1;save();render();
       toast(`Serie ${w.sets.filter(s=>s.ex===l.ex).length} de ${EXM[l.ex].name.toLowerCase()} guardada`);break}
     case 'close': closeSheet();break;
     case 'pick': stopTimer();{const pi=planItem(el.dataset.ex);ui.sheet={ex:el.dataset.ex,...prefill(el.dataset.ex,pi?pi[1]:null),rpe:null,edit:null}}renderSheet();break;
@@ -858,7 +868,7 @@ document.addEventListener('click',ev=>{
       const w=ensureToday(),set={ex:S.ex,v:S.v,val:S.val,kg:S.kg||null,rpe:S.rpe};
       if(S.edit!=null){w.sets[S.edit]=set;ui.fresh=S.edit}else{w.sets.push(set);ui.fresh=w.sets.length-1}
       const n=w.sets.filter(s=>s.ex===S.ex).length,name=EXM[S.ex].name.toLowerCase(),edited=S.edit!=null;
-      save();closeSheet();ui.view='hoy';render();const pm=!edited&&progMsg(S.ex);toast(pm||(edited?'Serie actualizada':`Serie ${n} de ${name} guardada`),pm?4200:1800);if(!edited)cheer();break}
+      save();closeSheet();ui.view='hoy';render();const pm=!edited&&progMsg(S.ex);toast(pm||(edited?'Serie actualizada':`Serie ${n} de ${name} guardada`),pm?4200:1800);{const pi=planItem(S.ex);if(!edited&&pi&&n===pi[2])cheer()}break}
     case 'del':{const w=todayW();w.sets.splice(S.edit,1);save();closeSheet();render();toast('Serie borrada');break}
     case 'wipe': if(el.classList.contains('armed')){db={workouts:[],hipo:[],v4:1};save();ui.view='hoy';render();toast('Datos borrados')}
       else{el.classList.add('armed');el.textContent='Toca otra vez para borrarlo todo'}break;
