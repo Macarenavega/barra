@@ -280,12 +280,19 @@ h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:22px;color:va
 .pl-t b{font-family:var(--f-display);font-weight:600;font-size:16.5px}
 .pl-t small{font-size:13px;color:var(--ink2);font-weight:600}
 .pl-t em{font-size:12.5px;color:var(--muted);font-style:normal}
-.ticks{display:flex;flex-wrap:wrap;gap:8px;padding-left:60px}
-.tick-kg{padding-left:60px;margin-top:-4px;font-size:12.5px;font-weight:800;color:var(--ink2)}
-.tk{width:48px;height:48px;border-radius:14px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--accent);display:grid;place-items:center;cursor:pointer;transition:transform .1s;font-family:var(--f-display);font-weight:600;font-size:16px;color:var(--accent-dark)}
-.tk:active{transform:scale(.92)}
-.tk.on{background:var(--accent-dark);color:var(--accent-ink);box-shadow:none}
-.tk .ic{width:20px;height:20px;stroke-width:3}
+.ticks{display:flex;flex-wrap:wrap;gap:8px;padding-top:2px}
+.tick-kg{font-size:12.5px;font-weight:800;color:var(--ink2)}
+.tk{flex:1 1 64px;max-width:84px;min-height:68px;border-radius:16px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:6px 2px;color:var(--accent-dark);font-family:var(--f-display);font-weight:600}
+.tk:active{transform:scale(.94)}
+.tk .mark{width:20px;height:20px;border-radius:50%;box-shadow:inset 0 0 0 1.75px currentColor;display:grid;place-items:center;flex:none}
+.tk .mark .ic{display:none;width:14px;height:14px;stroke-width:3}
+.tk .amt{font-size:18px;line-height:1}
+.tk .sub{font-family:var(--f-body);font-size:11px;line-height:1.1;font-weight:800}
+.tk.next{box-shadow:inset 0 0 0 2.5px var(--accent-dark)}
+.tk.on{background:var(--accent-dark);color:var(--accent-ink);box-shadow:none;animation:tickpop .18s ease-out}
+.tk.on .mark{background:#fff;color:var(--accent-dark);box-shadow:none}
+.tk.on .mark .ic{display:block}
+@keyframes tickpop{from{transform:scale(.9)}to{transform:scale(1)}}
 .pl-c{font-size:13px;font-weight:800;min-width:40px;height:30px;padding:0 10px;border-radius:999px;background:var(--bg);display:grid;place-items:center;white-space:nowrap}
 .pl-c .ic{width:16px;height:16px;stroke-width:2.8}
 .pl-c[data-act=quick]{min-width:64px;height:40px;gap:4px;display:flex;align-items:center;justify-content:center;background:var(--tint);color:var(--accent-dark);box-shadow:inset 0 0 0 1.5px var(--accent);cursor:pointer}
@@ -723,21 +730,23 @@ function suggested(){
   if(fixed&&!(lastSess(fixed)>=mon)) return fixed;
   return PRIO.find(k=>!(lastSess(k)>=mon))||null;
 }
+function tickFace(id,val,kg){
+  const sub=kg!=null?`${kg} kg`:'';
+  return `<span class="mark" aria-hidden="true">${ic('check')}</span><span class="amt num">${shortVal(id,val)}</span>${sub?`<span class="sub num">${sub}</span>`:''}`;
+}
 function ticksFor(id,v,n,sets){
   const e=EXM[id]; if(!e) return '';
   const doneSets=sets.map((s,i)=>({...s,i})).filter(s=>s.ex===id);
   const pf=prefill(id,v);
-  const preview=shortVal(id,pf.val);
-  const kg=pf.kg!=null?`, ${pf.kg} kg`:'';
+  const kgTxt=pf.kg!=null?`, ${pf.kg} kg`:'';
   let html='';
   for(let i=0;i<Math.max(n,doneSets.length);i++){
     if(i<doneSets.length){
       const s=doneSets[i];
-      html+=`<button type="button" class="tk on" data-act="untick" data-i="${s.i}" data-ex="${id}" aria-label="Quitar la serie ${i+1} de ${esc(e.name)}: ${s.val} ${unit(id,s.val)}${s.kg!=null?`, ${s.kg} kg`:''}">${shortVal(id,s.val)}</button>`;
-    }else if(i===doneSets.length){
-      html+=`<button type="button" class="tk next" data-act="quick" data-ex="${id}" data-v="${v}" aria-label="Anotar la serie ${i+1} de ${esc(e.name)}: ${pf.val} ${unit(id,pf.val)}${kg}">${preview}</button>`;
+      html+=`<button type="button" class="tk on" data-act="untick" data-i="${s.i}" data-ex="${id}" aria-pressed="true" aria-label="Quitar el tilde de la serie ${i+1} de ${esc(e.name)}: ${s.val} ${unit(id,s.val)}${s.kg!=null?`, ${s.kg} kg`:''}">${tickFace(id,s.val,s.kg)}</button>`;
     }else{
-      html+=`<button type="button" class="tk" data-act="quick" data-ex="${id}" data-v="${v}" aria-label="Anotar la siguiente serie de ${esc(e.name)}"></button>`;
+      const next=i===doneSets.length;
+      html+=`<button type="button" class="tk${next?' next':''}" data-act="quick" data-ex="${id}" data-v="${v}" aria-pressed="false" aria-label="${next?`Marcar la serie ${i+1}`:'Marcar la siguiente serie'} de ${esc(e.name)}: ${pf.val} ${unit(id,pf.val)}${kgTxt}">${tickFace(id,pf.val,pf.kg)}</button>`;
     }
   }
   return html;
@@ -767,13 +776,13 @@ function vPlan(sets){
       const done=sets.filter(s=>s.ex===id).length;
       const pf=prefill(id,v);
       const head=b&&b!==blk?`<li class="blk">${blk=b}</li>`:'';
-      const cap=done<n?(e.load&&pf.kg==null?'<span class="tick-kg">Falta el peso</span>':pf.kg!=null?`<span class="tick-kg num">${pf.kg} kg</span>`:''):'';
+      const cap=done<n&&e.load&&pf.kg==null?'<span class="tick-kg">Falta el peso: toca el nombre</span>':'';
       return `${head}<li class="pl-row${done>=n?' done':''}"><button type="button" class="pl" data-act="add" data-ex="${id}" data-v="${v}">
         <span class="thumb sm">${art(id,v)}</span>
         <span class="pl-t"><b>${esc(e.name)}</b><small class="num">${n} × ${esc(String(reps))}${e.vars.length>1?` · ${esc(e.vars[v]||'')}`:''}${rest?` · ${restTxt(rest)}`:''}</small>${note?`<em>${esc(note)}</em>`:''}</span></button>
         <div class="ticks" role="group" aria-label="Series de ${esc(e.name)}">${ticksFor(id,v,n,sets)}</div>${cap}</li>`;
     }).join('')}</ol>
-    <p class="warm">Toca la casilla con el número: se anota con los valores de la serie anterior. Si falta el peso, se abre el formulario. Una casilla verde quita esa serie. El nombre abre el detalle.</p>
+    <p class="warm">Cada recuadro es una serie, de la primera a la última. Tócalo para poner el tilde con esa cantidad; tócalo otra vez para quitarlo. Si la cantidad es otra, toca el nombre.</p>
     <p class="warm">Hipopresivos en ayunas al levantarte. Estiramientos largos después de la fuerza, no antes.</p></section>`;
 }
 const HIPO=['Brazos hacia atrás, pecho abierto, crecer hacia el techo','Brazos delante de la cara, escápulas separadas, tronco apenas inclinado',
