@@ -1,0 +1,14 @@
+{
+  "name": "barra",
+  "short_name": "barra",
+  "description": "Cuaderno de calistenia para anotar series entre serie y serie.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F3EDE2",
+  "theme_color": "#F3EDE2",
+  "lang": "es",
+  "icons": [
+    { "src": "icons/logo.png", "sizes": "160x144", "type": "image/png", "purpose": "any" }
+  ]
+}
