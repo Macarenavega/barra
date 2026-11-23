@@ -125,6 +125,8 @@ h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:22px;color:va
 .ex-card p{margin:2px 6px 0;font-size:13px;color:var(--ink2)}
 .back{display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:15px;color:var(--ink2);height:44px;margin-top:8px}
 .hero-pic{border-radius:28px;overflow:hidden;box-shadow:var(--shadow)}
+a.exrx{display:flex;align-items:center;justify-content:center;min-height:48px;margin-top:12px;padding:12px 16px;border-radius:999px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--accent-dark);color:var(--accent-dark);font-weight:800;text-decoration:none;text-align:center}
+.exrx-note{margin:8px 2px 0;font-size:13.5px;line-height:1.4;color:var(--ink2);font-weight:700}
 .prog .vb{display:contents;text-align:left}
 .prog li[data-act]{cursor:pointer}
 .prog li.sel .vn{text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:4px}
@@ -510,6 +512,21 @@ const EX=[
     teach:{steps:['Boca arriba, rodillas dobladas, pies en el suelo, manos sobre la tripa.','Inhala por la nariz unos 4 segundos: la tripa sube.','Exhala unos 6 segundos: la tripa baja, suave.','Sigue así el tiempo de la serie, sin forzar.'],cues:['Hombros flojos.','El pecho se mueve poco.','La exhalación es más larga que la inhalación.'],mistakes:['Aguantar el aire.','Respirar solo en la parte alta del pecho.','Ir deprisa.'],safe:'Si te marea, vuelve a respirar normal. Esto es el cierre, no una prueba.'}},
 ];
 const EXM=Object.fromEntries(EX.map(e=>[e.id,e]));
+// Fichas de ExRx (solo el enlace; las animaciones no se copian ni se incrustan).
+const EXRX={
+  espDead:{url:'https://exrx.net/WeightExercises/ErectorSpinae/BWAlternatingBirdDog',note:'En ExRx no está el dead bug. Lo más parecido es el bird dog alterno: a cuatro patas, brazo y pierna contrarios.'},
+  espHalo:{url:'https://exrx.net/WeightExercises/DeltoidAnterior/DBOneArmShoulderPress',note:'En ExRx no hay halo. Lo más cercano es el press de hombro a una mano: el brazo sube junto a la oreja, no da la vuelta a la cabeza.'},
+  espSwing:{url:'https://exrx.net/WeightExercises/Kettlebell/KBTwoArmSwing'},
+  espGoblet:{url:'https://exrx.net/WeightExercises/Kettlebell/KBGobletSquat'},
+  espRow:{url:'https://exrx.net/WeightExercises/BackGeneral/DBBentOverRow',note:'En ExRx es el remo con mancuerna, una mano y la rodilla apoyadas en el banco. El gesto es el mismo.'},
+  espPress:{url:'https://exrx.net/WeightExercises/Kettlebell/KBPress'},
+  espTwist:{url:'https://exrx.net/Plyometrics/MBRussianTwist',note:'En ExRx es con balón medicinal y un poco más rápido. Tú deja los dos pies en el suelo.'},
+  espPlank:{url:'https://exrx.net/WeightExercises/RectusAbdominis/BWFrontPlank'},
+  espSide:{url:'https://exrx.net/WeightExercises/Obliques/BWSidePlank'},
+  espHollow:{url:'https://exrx.net/WeightExercises/HipFlexors/BWLyingLegRaise',note:'En ExRx es la elevación de piernas tumbada. Sirve para ver cómo no arquear la lumbar; tú también despegas un poco los hombros, con las rodillas dobladas.'},
+  espCurl:{url:'https://exrx.net/WeightExercises/Biceps/BBCurl',note:'En ExRx es el curl con barra: las dos manos y los codos quietos. El gesto es el mismo.'},
+  espBreath:{url:'https://exrx.net/WeightExercises/TransverseAbdominis/AbdominalVacuum',note:'En ExRx es el abdominal vacuum (el ombligo hacia dentro). En esta serie, al inhalar la tripa sube. El vídeo solo ayuda a verte tumbada y tranquila.'},
+};
 
 // Sesiones de la rutina: [ejercicio, variante objetivo, series, reps, descanso en s, nota, bloque]
 const PRE=[['shinbox',0,1,'8 por lado',0,'','Movilidad previa'],['sentIsq',0,1,'12',0,'','Movilidad previa'],['mariposa',0,1,'8 por lado',0,'','Movilidad previa'],
@@ -964,8 +981,10 @@ function vEjercicio(){
   const inPlan=[];
   Object.entries(PLAN).forEach(([key,p])=>{planItems(key,null).forEach(i=>{if(i[0]===e.id) inPlan.push(`${isKb()&&p.kbName||p.name}: ${i[2]} × ${i[3]}`)})});
   const tch=e.teach;
+  const xr=EXRX[e.id];
   return `<button type="button" class="back" data-act="${e.esp?'back':'tab'}" ${e.esp?'':`data-v="ejercicios"`}>${ic('back')}${e.esp?'Volver a la rutina':'Ejercicios'}</button>
   <div class="hero-pic">${art(e.id,dv)}</div>
+  ${xr?`<a class="exrx" href="${esc(xr.url)}" target="_blank" rel="noopener noreferrer">Ver animación en ExRx</a>${xr.note?`<p class="exrx-note">${esc(xr.note)}</p>`:''}`:''}
   <section class="head" style="padding-top:0"><h1 class="display" style="font-size:40px">${esc(e.name)}</h1>
     <div class="meta">${metaTags(e).map(t=>`<span class="tag">${t}</span>`).join('')}<span class="tag" style="background:var(--bg)">${esc(e.muscles)}</span></div></section>
   <p class="cue">${esc(e.cue)}</p>
