@@ -300,8 +300,28 @@ h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:22px;color:va
 .pl-c[data-act=quick]:active{transform:scale(.94)}
 .pl-row.done .pl-t b{color:var(--ink2)}
 .plan h2{margin-top:2px}
+.plan-actions{display:flex;gap:8px;flex:none}
 .sess-chips{margin-top:12px}
 .warm{margin:12px 0 0;font-size:13px;color:var(--ink2);line-height:1.5}
+.esp-card{display:flex;flex-direction:column;gap:10px}
+.esp-toggle{width:100%;text-align:left;padding:14px 16px;border-radius:20px;background:var(--tint);box-shadow:inset 0 0 0 2px var(--accent-dark);display:flex;flex-direction:column;gap:4px}
+.esp-toggle b{font-family:var(--f-display);font-size:18px;font-weight:600}
+.esp-kicker{font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--accent-dark)}
+.esp-toggle small{color:var(--ink2);font-weight:700;font-size:13.5px;line-height:1.4}
+.esp-toggle em{font-style:normal;font-weight:800;color:var(--accent-dark);display:flex;align-items:center;gap:4px}
+.esp-toggle[aria-pressed=true]{background:var(--accent-dark);color:#fff}
+.esp-toggle[aria-pressed=true] .esp-kicker,.esp-toggle[aria-pressed=true] small,.esp-toggle[aria-pressed=true] em{color:#F4F7EF}
+.esp-go{box-shadow:inset 0 0 0 2px var(--accent)}
+button.pl-t{width:100%;text-align:left}
+.how{font-size:12.5px;font-weight:800;color:var(--accent-dark);font-style:normal}
+.steps,.cues,.miss{margin:6px 0 12px;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:15px;line-height:1.45}
+.safe{margin:0;background:var(--bg);border-radius:14px;padding:10px 12px;font-size:14.5px;line-height:1.45}
+.esp-lead p{margin:0 0 8px;font-size:14.5px;line-height:1.45}
+.art svg{position:absolute;inset:2%;width:96%;height:96%}
+.art svg.peak{opacity:0;animation:frame-b 2.4s steps(1,end) infinite}
+.art svg:first-child:not(:only-child){animation:frame-a 2.4s steps(1,end) infinite}
+.thumb .art svg{animation:none}
+.thumb .art svg.peak{display:none}
 .kg-row{display:grid;grid-template-columns:52px 1fr 52px;align-items:center;gap:8px}
 .kg-row>button{height:52px;border-radius:50%;background:var(--surface);border:1.5px solid var(--soft);display:grid;place-items:center;color:var(--accent-dark)}
 .kg-row div{display:flex;align-items:baseline;justify-content:center;gap:4px}
@@ -309,9 +329,9 @@ h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:22px;color:va
 .kg-row input::-webkit-inner-spin-button,.kg-row input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 .kg-row span{font-weight:700;color:var(--ink2)}
 /* Hueco de ilustración pendiente: recuadro con el nombre del ejercicio */
-.art:not(:has(img))::after{content:attr(data-label);position:absolute;inset:6px;display:grid;place-items:center;text-align:center;padding:8%;
+.art:not(:has(img)):not(.esp-art)::after{content:attr(data-label);position:absolute;inset:6px;display:grid;place-items:center;text-align:center;padding:8%;
   font-size:12px;font-weight:700;color:var(--ink2);border:2px dashed #CDBFA8;border-radius:16px}
-.thumb .art:not(:has(img))::after{content:"";inset:4px;border-radius:12px}
+.thumb .art:not(:has(img)):not(.esp-art)::after{content:"";inset:4px;border-radius:12px}
 .thumb .art img{animation:none}
 .thumb .art .peak{display:none}
 .group.has-climber{margin-top:36px}
@@ -463,6 +483,31 @@ const EX=[
   {id:'kbCurl',kb:1,name:'Curl femoral con toalla deslizante',type:'reps',side:true,muscles:'Isquios · glúteo',cue:'En lugar del curl en fitball. Boca arriba, talón sobre una toalla en suelo liso, cadera arriba; arrastra el talón hacia el glúteo sin bajar la cadera.',vars:['Dos piernas','Una pierna']},
   {id:'kbBuenos',kb:1,name:'Buenos días, halo y superman',type:'reps',load:true,cap:24,muscles:'Lumbar · glúteo · hombro',cue:'En lugar de la silla romana. Buenos días con la kettlebell en el pecho (flexión/extensión), halo alrededor de la cabeza (rotacional) y superman sostenido 20-30" (isométrico).',vars:['Buenos días','Halo','Superman isométrico (s)']},
   {id:'kbPullThrough',kb:1,name:'Plancha con arrastre de kettlebell',type:'reps',side:true,muscles:'Core · oblicuos',cue:'En lugar de la rotación con banda. En plancha alta, pasa la kettlebell de un lado al otro por debajo del cuerpo sin girar la cadera.',vars:['Plancha alta']},
+  // Rutina especial Maca: no entra en el plan de la semana. esp:1 la oculta hasta que ella la activa.
+  {id:'espDead',esp:1,name:'Dead bug',type:'reps',side:true,mob:1,muscles:'Core',cue:'Lumbar pegada al suelo. Lento.',vars:['Rodillas a 90°'],
+    teach:{steps:['Túmbate boca arriba, brazos al techo y rodillas a 90°.','Aplasta la zona lumbar contra el suelo, como si hubiera un papel.','Alarga un brazo y la pierna contraria, despacio, y vuelve.','Cambia de lado. Eso es una repetición por lado.'],cues:['Exhala al alargar.','La tripa no se abomba.','Si se despega la espalda, acorta el movimiento.'],mistakes:['Arquear la lumbar.','Bajar brazo y pierna de más.','Ir rápido.'],safe:'Si tira del cuello, deja la cabeza apoyada en el suelo.'}},
+  {id:'espHalo',esp:1,name:'Halo con kettlebell',type:'reps',load:true,side:true,kg:12,muscles:'Hombro · core',cue:'Círculo lento alrededor de la cabeza. Costillas abajo.',vars:['Por los cuernos'],
+    teach:{steps:['De pie, sujeta la kettlebell boca abajo por los cuernos, pegada al pecho.','Dibuja un círculo lento alrededor de la cabeza.','Los codos van cerca de la cara y las costillas no se abren.','Al terminar las repeticiones, cambia de dirección: eso es el otro lado.'],cues:['Glúteo y abdomen apretados.','La pesa pasa cerca de la cabeza, no lejos.','Hombros lejos de las orejas.'],mistakes:['Echar la cadera adelante.','Subir los hombros.','Hacer el círculo con prisa.'],safe:'Si el hombro pincha, haz el círculo sin peso. No hace falta bajar mucho la pesa por la espalda. Partida 12 kg; con 22 kg, más lento y menos vueltas.'}},
+  {id:'espSwing',esp:1,name:'Swing a dos manos',type:'reps',load:true,kg:16,muscles:'Cadera · core · metabólico',cue:'El impulso sale de la cadera. La pesa llega al pecho, no más.',vars:['A dos manos'],
+    teach:{steps:['Pies un poco más abiertos que la cadera. La kettlebell, un paso por delante.','Empuja la cadera atrás, rodillas blandas, espalda recta, y toma la pesa.','El impulso sale de la cadera: la pesa sube hasta la altura del pecho. Los brazos van flojos.','Dejas que baje y te pliegas otra vez, sin sentadilla.'],cues:['Mira al frente, no al suelo.','Arriba, aprieta el glúteo un segundo.','La pesa flota; no la tiras con los hombros.'],mistakes:['Redondear la espalda.','Hacer sentadilla en vez de bisagra.','Subir la pesa por encima de la cabeza.'],safe:'Partida 16 kg. Si solo tienes 22 kg, haz menos repeticiones y para en cuanto la espalda se curve. Si notas el sacro, pasa al remo.'}},
+  {id:'espGoblet',esp:1,name:'Sentadilla goblet',type:'reps',load:true,kg:22,muscles:'Piernas · core',cue:'Kettlebell en el pecho. Rodillas hacia los dedos.',vars:['Kettlebell al pecho'],
+    teach:{steps:['La kettlebell pegada al pecho, codos hacia abajo.','Pies a la anchura de la cadera, puntas un poco afuera.','Siéntate entre los talones. Las rodillas siguen la línea de los dedos.','Empuja el suelo para subir, pecho abierto.'],cues:['Los codos rozan por dentro de las rodillas.','El peso está en todo el pie, talón incluido.','Abajo, la espalda sigue larga.'],mistakes:['Juntar las rodillas.','Levantar los talones.','Redondear la espalda abajo.'],safe:'22 kg, como tu goblet de siempre. Baja solo hasta donde la espalda no se redondee.'}},
+  {id:'espRow',esp:1,name:'Remo a una mano',type:'reps',load:true,side:true,kg:22,muscles:'Espalda · bíceps',cue:'Codo a la cadera. El tronco no gira.',vars:['Apoyo en silla'],
+    teach:{steps:['Una mano y la rodilla de ese mismo lado, apoyadas en una silla que no se mueva.','Espalda recta, casi paralela al suelo. El otro brazo cuelga con la pesa.','Lleva el codo hacia la cadera, sin girar el tronco.','Baja despacio hasta estirar el brazo y repite. Luego cambia de lado.'],cues:['El omóplato se junta hacia la columna.','El cuello sigue la línea de la espalda.','La bajada dura más que la subida.'],mistakes:['Encoger el hombro hacia la oreja.','Girar el tronco para ayudar.','Dar un tirón.'],safe:'Para si la silla se mueve. 22 kg vale si frenas la bajada; si no, haz menos repeticiones.'}},
+  {id:'espPress',esp:1,name:'Press a una mano',type:'reps',load:true,side:true,kg:14,muscles:'Hombro · tríceps · core',cue:'Costillas metidas. Sin arquear la lumbar.',vars:['De pie'],
+    teach:{steps:['La pesa descansa en el antebrazo, al lado de la cara, codo hacia el suelo.','Aprieta glúteo y abdomen, y mete las costillas.','Empuja la pesa hacia el techo: el bíceps acaba cerca de la oreja.','Baja hasta el hombro sin arquear la zona lumbar. Luego el otro brazo.'],cues:['La cadera no se va hacia un lado.','Exhala al empujar.','El codo no se abre del todo hacia afuera.'],mistakes:['Arquear para que suba.','Empujar con las rodillas.','Dejar caer la pesa.'],safe:'Partida 14 kg. Con 22 kg, solo si sube recta y sin dolor. Si no sube limpia, haz menos repeticiones o empújala con las dos manos desde el pecho, sin arquear.'}},
+  {id:'espTwist',esp:1,name:'Giro ruso',type:'reps',load:true,side:true,kg:12,muscles:'Oblicuos · core',cue:'Pies en el suelo. Giran las costillas, no solo los brazos.',vars:['Pies apoyados'],
+    teach:{steps:['Siéntate con las rodillas dobladas y los dos pies bien apoyados.','El tronco un poco atrás, el pecho abierto.','Lleva la pesa de un lado al otro, pegada al cuerpo.','El giro sale de las costillas. Un lado y el otro cuentan como una repetición por lado.'],cues:['Los pies no se levantan.','Exhala al girar.','La pesa va cerca de la cadera, no lejos.'],mistakes:['Balancear la pesa con los brazos estirados.','Redondear y tirar del cuello.','Rebotar.'],safe:'Pies siempre en el suelo. Si molesta la lumbar, siéntate más erguida y baja el peso. Partida 12 kg.'}},
+  {id:'espPlank',esp:1,name:'Plancha',type:'time',muscles:'Core',cue:'Una tabla de la cabeza a los talones. Respiras.',vars:['Sobre los antebrazos'],
+    teach:{steps:['Antebrazos bajo los hombros, codos a 90°.','Empuja el suelo. El cuerpo es una tabla de la cabeza a los talones.','Glúteo apretado: ni hundas la cadera ni la subas de más.','Respira. Si tiembla el abdomen, vas bien.'],cues:['Mirada al suelo, cuello largo.','Costillas metidas.','Empuja los talones hacia atrás.'],mistakes:['Cadera muy alta o caída.','Aguantar el aire.','Dejar caer la cabeza.'],safe:'Si duele la lumbar, apoya las rodillas y acorta el tiempo. Para si el dolor sigue.'}},
+  {id:'espSide',esp:1,name:'Plancha lateral',type:'time',side:true,muscles:'Oblicuos · cadera',cue:'Cadera arriba. El cuerpo no se gira hacia el suelo.',vars:['Antebrazo'],
+    teach:{steps:['De lado, el codo justo debajo del hombro.','Sube la cadera: cuerpo recto, pies juntos o uno un poco delante.','La mano de arriba puede ir a la cadera.','Baja con control y cambia de lado.'],cues:['No dejes caer la cadera.','Cuello largo, mirada al frente.','El pecho mira al lado, no al suelo.'],mistakes:['Rodar el pecho hacia el suelo.','Encoger el hombro de apoyo.','Aguantar el aire.'],safe:'Si no aguantas el cuerpo entero, apoya la rodilla de abajo. Sigue contando.'}},
+  {id:'espHollow',esp:1,name:'Hollow corto',type:'time',muscles:'Core',cue:'Lumbar pegada. Rodillas dobladas.',vars:['Rodillas dobladas'],
+    teach:{steps:['Boca arriba, la lumbar pegada al suelo.','Despega un poco la cabeza y los hombros, mirando a las rodillas.','Rodillas dobladas y pies bajos, sin que la espalda se arquee.','Aguanta el tiempo y apoya para descansar.'],cues:['Si se despega la lumbar, sube más los pies.','Exhala largo.','El cuello no hace el trabajo: la fuerza está en el abdomen.'],mistakes:['Tirar de la nuca con las manos.','Estirar las piernas si aún se arquea la espalda.','Aguantar el aire hasta marearte.'],safe:'Cabeza apoyada si el cuello se cansa. No estires las piernas hasta que la lumbar siga pegada.'}},
+  {id:'espCurl',esp:1,name:'Curl a dos manos',type:'reps',load:true,kg:16,muscles:'Bíceps',cue:'Codos pegados a las costillas. Sin balanceo.',vars:['Asa con las dos manos'],
+    teach:{steps:['De pie, sujeta el asa con las dos manos, brazos estirados delante de los muslos.','Pega los codos a las costillas.','Flexiona solo los codos hasta cerca del pecho.','Baja despacio, sin echar el cuerpo atrás.'],cues:['Las muñecas siguen al antebrazo.','Rodillas un poco blandas.','La bajada cuenta tanto como la subida.'],mistakes:['Balancear la cadera para ayudar.','Separar los codos del cuerpo.','Dejar caer la pesa.'],safe:'Partida 16 kg. Con 22 kg, menos repeticiones, y para si arqueas la lumbar para subirla.'}},
+  {id:'espBreath',esp:1,name:'Respiración tumbada',type:'time',mob:1,muscles:'Diafragma · calma',cue:'Inhala 4 y exhala 6. La tripa sube y baja.',vars:['Rodillas dobladas'],
+    teach:{steps:['Boca arriba, rodillas dobladas, pies en el suelo, manos sobre la tripa.','Inhala por la nariz unos 4 segundos: la tripa sube.','Exhala unos 6 segundos: la tripa baja, suave.','Sigue así el tiempo de la serie, sin forzar.'],cues:['Hombros flojos.','El pecho se mueve poco.','La exhalación es más larga que la inhalación.'],mistakes:['Aguantar el aire.','Respirar solo en la parte alta del pecho.','Ir deprisa.'],safe:'Si te marea, vuelve a respirar normal. Esto es el cierre, no una prueba.'}},
 ];
 const EXM=Object.fromEntries(EX.map(e=>[e.id,e]));
 
@@ -492,6 +537,20 @@ const PLAN={
     ['muNeg',0,2,'3',120,'Como el martes, menos volumen','Fuerza'],['archer',0,1,"AMRAP 8'",0,'Apunta cuántas series salen','Fuerza'],
     ['pressMilitar',0,2,'8',90,'','Fuerza'],['remoMancuerna',0,3,'10 por lado',90,'','Fuerza'],['goblet',2,3,'12',90,'','Fuerza'],
     ['curlFitball',0,2,'8-10 por pierna',60,'','Fuerza'],['sillaRomana',0,2,'8-10 por variante',60,'Isométrico: 20-30"','Fuerza'],['rotBanda',0,2,'12 por lado',45,'Resiste la rotación','Fuerza']]},
+  // No sale en la cuadrícula de los días. Solo si Maca activa la rutina especial.
+  esp:{name:'Rutina especial Maca',short:'Especial',dow:-1,mins:'~40',items:[
+    ['espDead',0,2,'6 por lado',20,'Aprende a apretar el abdomen','Entrada'],
+    ['espHalo',0,2,'6 por lado',20,'Hombros, sin prisa','Entrada'],
+    ['espSwing',0,4,'12',45,'El motor de la rutina','Metabólico'],
+    ['espGoblet',0,3,'10',45,'','Metabólico'],
+    ['espRow',0,3,'8 por lado',45,'','Metabólico'],
+    ['espPress',0,3,'6 por lado',60,'','Metabólico'],
+    ['espTwist',0,3,'8 por lado',30,'Pies quietos en el suelo','Core'],
+    ['espPlank',0,3,'30"',30,'','Core'],
+    ['espSide',0,2,'20" por lado',20,'','Core'],
+    ['espHollow',0,3,'20"',20,'Rodillas dobladas','Core'],
+    ['espCurl',0,3,'8',40,'','Brazos'],
+    ['espBreath',0,1,'90"',0,'Cierra aquí','Cierre']]},
 };
 const PRIO=['d1','d2','d4','d3'];
 // Modo kettlebell: qué cambia por qué. Mantiene las series de la sesión salvo que se indique otra cosa
@@ -515,7 +574,7 @@ const isKb=()=>db.mode==='kb';
 const toKb=it=>{const a=KB_ALT[it[0]];if(!a)return it;
   return [a.to,0,a.sets??it[2],a.reps??it[3],a.rest??it[4],a.note??it[5],it[6]==='Barra'?'Kettlebell':it[6]]};
 // Ejercicios que no se usan en el modo actual (el equivalente del otro modo)
-const hiddenIds=()=>new Set(isKb()?Object.keys(KB_ALT):Object.values(KB_ALT).map(a=>a.to));
+const hiddenIds=()=>{const s=new Set(isKb()?Object.keys(KB_ALT):Object.values(KB_ALT).map(a=>a.to));if(!db.especial) EX.forEach(e=>{if(e.esp) s.add(e.id)});return s};
 // Ciclo de piernas de 5 semanas, empezando el lunes 16 nov 2026
 const CICLO0='2026-11-16';
 const cicloWeek=()=>((Math.floor(daysBetween(CICLO0,todayISO())/7)%5)+5)%5+1;
@@ -538,11 +597,55 @@ const IMG={pushInc:'push-up-inclinado',pushRod:'push-up-rodillas',remoPolea:'rem
   kbRemoExc:'remo-mancuerna',kbRemoPesado:'remo-mancuerna',kbHighPull:'kb-high-pull',kbCarry:'kb-carry',kbPullover:'kb-pullover',
   kbHollow:'kb-hollow-pullover',kbCurl:'kb-curl-toalla',kbBuenos:'kb-buenos-dias',kbPullThrough:'kb-pull-through'};
 const NOIMG=new Set();
+// Dibujos de la rutina especial: dos posturas, sin imágenes externas.
+const SK='#F0CDB4',HR='#6B442C',TP='#7A9A6B',SH='#4F6B45',KB='#2C3832',LN='#24302C';
+const hd=(x,y)=>`<g><circle cx="${x}" cy="${y}" r="9" fill="${SK}"/><path d="M${x-8} ${y-1}c2-13 15-13 17 0" fill="${HR}"/></g>`;
+const kb=(x,y,s=1)=>`<g transform="translate(${x} ${y}) scale(${s})"><circle cx="0" cy="7" r="11" fill="${KB}"/><path d="M-7 2c0-12 14-12 14 0" fill="none" stroke="${LN}" stroke-width="3.2" stroke-linecap="round"/></g>`;
+const limb=(x1,y1,x2,y2,w,c)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`;
+const POSE={
+  espDead:[
+    hd(80,18)+limb(80,28,80,62,14,TP)+limb(80,36,58,28,7,SK)+limb(80,36,102,28,7,SK)+limb(74,62,58,78,8,SH)+limb(58,78,52,96,7,SK)+limb(86,62,102,78,8,SH)+limb(102,78,108,96,7,SK)+`<circle cx="80" cy="70" r="3" fill="${LN}"/>`,
+    hd(80,18)+limb(80,28,80,62,14,TP)+limb(80,36,48,22,7,SK)+limb(80,36,98,48,7,SK)+limb(74,62,58,78,8,SH)+limb(58,78,52,96,7,SK)+limb(86,62,112,78,8,SH)+limb(112,78,132,74,7,SK)],
+  espHalo:[
+    hd(78,28)+limb(78,38,78,78,14,TP)+limb(78,78,62,108,8,SH)+limb(78,78,96,108,8,SH)+limb(70,48,96,42,7,SK)+limb(86,48,108,36,7,SK)+kb(112,28),
+    hd(78,26)+limb(78,36,78,78,14,TP)+limb(78,78,62,108,8,SH)+limb(78,78,96,108,8,SH)+limb(70,46,92,18,7,SK)+limb(86,46,108,16,7,SK)+kb(118,8,.9)],
+  espSwing:[
+    hd(96,46)+limb(92,54,118,86,14,TP)+limb(118,86,86,112,8,SH)+limb(118,86,136,112,8,SH)+limb(100,62,88,96,7,SK)+limb(108,66,96,100,7,SK)+kb(90,108,.95),
+    hd(74,24)+limb(74,34,74,74,14,TP)+limb(74,74,58,110,8,SH)+limb(74,74,92,110,8,SH)+limb(68,46,108,40,7,SK)+limb(80,46,116,44,7,SK)+kb(124,40)],
+  espGoblet:[
+    hd(78,22)+limb(78,32,78,70,14,TP)+limb(78,70,62,108,8,SH)+limb(78,70,96,108,8,SH)+limb(66,46,78,58,7,SK)+limb(90,46,78,58,7,SK)+kb(78,62,.85),
+    hd(80,36)+limb(80,46,80,72,14,TP)+limb(80,72,52,100,8,SH)+limb(52,100,48,112,7,SK)+limb(80,72,112,100,8,SH)+limb(112,100,116,112,7,SK)+limb(68,54,80,66,7,SK)+limb(92,54,80,66,7,SK)+kb(80,70,.85)],
+  espRow:[
+    hd(46,36)+limb(50,44,108,58,14,TP)+limb(108,58,128,96,8,SH)+limb(70,52,70,86,8,SH)+limb(108,52,132,78,7,SK)+kb(136,86),
+    hd(46,34)+limb(50,42,108,56,14,TP)+limb(108,56,128,94,8,SH)+limb(70,50,70,84,8,SH)+limb(100,50,78,58,7,SK)+kb(74,62,.9)],
+  espPress:[
+    hd(78,34)+limb(78,44,78,82,14,TP)+limb(78,82,62,112,8,SH)+limb(78,82,96,112,8,SH)+limb(70,52,62,70,7,SK)+kb(58,78,.9),
+    hd(78,30)+limb(78,40,78,80,14,TP)+limb(78,80,62,110,8,SH)+limb(78,80,96,110,8,SH)+limb(72,46,78,18,7,SK)+kb(78,8,.85)],
+  espTwist:[
+    hd(78,28)+limb(78,38,78,62,14,TP)+limb(78,62,58,86,8,SH)+limb(58,86,52,102,7,SK)+limb(78,62,104,84,8,SH)+limb(104,84,112,100,7,SK)+limb(70,50,108,58,7,SK)+kb(116,60,.8),
+    hd(70,28)+limb(70,38,78,62,14,TP)+limb(78,62,58,86,8,SH)+limb(58,86,52,102,7,SK)+limb(78,62,104,84,8,SH)+limb(104,84,112,100,7,SK)+limb(74,50,40,56,7,SK)+kb(32,58,.8)],
+  espPlank:[
+    hd(36,58)+limb(44,62,118,66,14,TP)+limb(118,66,132,96,8,SH)+limb(44,60,28,78,7,SK)+`<line x1="24" y1="86" x2="56" y2="86" stroke="${LN}" stroke-width="3" stroke-linecap="round"/>`,
+    hd(36,54)+limb(44,58,120,58,14,TP)+limb(120,58,138,90,8,SH)+limb(46,56,30,74,7,SK)+`<line x1="24" y1="82" x2="58" y2="82" stroke="${LN}" stroke-width="3" stroke-linecap="round"/>`],
+  espSide:[
+    hd(40,40)+limb(48,48,112,52,14,TP)+limb(112,52,128,86,8,SH)+limb(48,50,36,70,7,SK)+`<line x1="28" y1="78" x2="52" y2="78" stroke="${LN}" stroke-width="3" stroke-linecap="round"/>`,
+    hd(42,36)+limb(50,46,114,46,14,TP)+limb(114,46,130,82,8,SH)+limb(52,44,52,22,7,SK)+`<line x1="28" y1="74" x2="54" y2="74" stroke="${LN}" stroke-width="3" stroke-linecap="round"/>`],
+  espHollow:[
+    hd(36,70)+limb(46,74,100,78,14,TP)+limb(100,78,124,70,8,SH)+limb(46,72,62,58,7,SK)+`<line x1="24" y1="96" x2="140" y2="96" stroke="${LN}" stroke-width="3" stroke-linecap="round"/>`,
+    hd(40,58)+limb(50,64,96,70,14,TP)+limb(96,70,118,58,8,SH)+limb(50,62,70,46,7,SK)+`<path d="M28 96h112" stroke="${LN}" stroke-width="3" stroke-linecap="round"/><path d="M48 86q20 8 40 0" fill="none" stroke="${LN}" stroke-width="2" stroke-dasharray="3 3"/>`],
+  espCurl:[
+    hd(78,24)+limb(78,34,78,78,14,TP)+limb(78,78,62,110,8,SH)+limb(78,78,96,110,8,SH)+limb(70,50,78,86,7,SK)+limb(86,50,78,86,7,SK)+kb(78,96,.85),
+    hd(78,24)+limb(78,34,78,78,14,TP)+limb(78,78,62,110,8,SH)+limb(78,78,96,110,8,SH)+limb(68,48,62,36,7,SK)+limb(88,48,94,36,7,SK)+kb(78,28,.8)],
+  espBreath:[
+    hd(40,62)+limb(50,68,108,74,14,TP)+limb(108,74,132,66,8,SH)+`<ellipse cx="78" cy="70" rx="10" ry="6" fill="#DDE7D3" stroke="${LN}" stroke-width="1.5"/>`+`<line x1="28" y1="100" x2="144" y2="100" stroke="${LN}" stroke-width="3" stroke-linecap="round"/>`,
+    hd(40,60)+limb(50,66,108,72,14,TP)+limb(108,72,132,64,8,SH)+`<ellipse cx="78" cy="66" rx="16" ry="10" fill="#DDE7D3" stroke="${LN}" stroke-width="1.5"/>`+`<line x1="28" y1="100" x2="144" y2="100" stroke="${LN}" stroke-width="3" stroke-linecap="round"/>`],
+};
 function art(id,v=curVariant(id)){
   const f=IMG[id],e=EXM[id];
   if(!e) return `<span class="art" data-label=""></span>`;
   const alt=esc(`${e.name}: ${e.vars[v]||e.vars[0]||''}`);
   const label=esc(e.name);
+  if(e.esp&&POSE[id]) return `<span class="art esp-art" data-label="${label}"><svg viewBox="0 0 160 120" role="img" aria-label="${alt}">${POSE[id][0]}</svg><svg class="peak" viewBox="0 0 160 120" aria-hidden="true">${POSE[id][1]}</svg></span>`;
   return `<span class="art" data-label="${label}">${NOIMG.has(f)?'':`<img src="ex/${f}-a.webp" alt="${alt}" data-img="${f}" loading="lazy" decoding="async"><img class="peak" src="ex/${f}-b.webp" alt="" data-img="${f}" loading="lazy" decoding="async">`}</span>`;
 }
 
@@ -751,23 +854,33 @@ function ticksFor(id,v,n,sets){
   }
   return html;
 }
+function espCard(){
+  const on=!!db.especial;
+  const l=lastSess('esp');
+  return `<section class="card esp-card"><button type="button" class="esp-toggle" data-act="especial" aria-pressed="${on}">
+      <span class="esp-kicker">Aparte del plan de tu amiga</span>
+      <b>Rutina especial Maca</b>
+      <small>${on?'Está activada. Si la quitas, lo que ya anotaste sigue en el historial.':'Core y brazos con una kettlebell, para entrenar sola. No forma parte de los días 1 a 4.'}</small>
+      <em>${on?ic('check')+'Activada · toca para quitarla':'Activar y entrenar'}</em>
+    </button>${on?`<button type="button" class="sess-btn esp-go" data-act="sess" data-v="esp"><b>Hacer la rutina especial</b><small>~40 min · kettlebell</small><em>${l?`Última: ${fShort(l)}`:'Entrenar ahora'}</em></button>`:''}</section>`;
+}
 function vPlan(sets){
   const k=sessKey(),w=todayW();
   if(!k){
     const mon=monday(todayISO()),sg=suggested(),dow=D(todayISO()).getDay(),rest=!Object.values(PLAN).some(p=>p.dow===dow);
     return `<section class="card group plan has-climber">${CLAY('dominada','Personaje en dominada','climber')}
       <p class="eyebrow">Elige la sesión</p><div class="mode-t" role="group" aria-label="Material"><button type="button" data-act="mode" data-v="bar" aria-pressed="${!isKb()}">Barra</button><button type="button" data-act="mode" data-v="kb" aria-pressed="${isKb()}">Kettlebell</button></div><h2>${rest?(dow===6?'Hoy toca descanso o escalada':'Hoy toca descanso'):'¿Qué entrenas hoy?'}</h2>
-      <div class="sess-grid">${Object.entries(PLAN).map(([key,p])=>{const l=lastSess(key),wk=l&&l>=mon;
+      <div class="sess-grid">${Object.entries(PLAN).filter(([key])=>key!=='esp').map(([key,p])=>{const l=lastSess(key),wk=l&&l>=mon;
         return `<button type="button" class="sess-btn${wk?' wk':''}${key===sg?' sg':''}" data-act="sess" data-v="${key}"><b>${esc(isKb()&&p.kbName||p.name)}</b><small>${DIAL[p.dow]} · ${p.mins} min</small>
           <em>${wk?`${ic('check')}Hecha esta semana`:key===sg?(p.dow===dow?'Toca hoy':'La siguiente en prioridad'):l?`Última: ${fShort(l)}`:'Aún sin hacer'}</em></button>`}).join('')}</div>
-      <p class="warm">Si un día se cae, el orden de prioridad es Día 1, Día 2, Día 4, Día 3. Escalada: jueves ligera (técnica) y sábado, el mejor día.</p></section>`;
+      <p class="warm">Si un día se cae, el orden de prioridad es Día 1, Día 2, Día 4, Día 3. Escalada: jueves ligera (técnica) y sábado, el mejor día.</p></section>${espCard()}`;
   }
   const p=PLAN[k],items=planItems(k,w);let blk=null;
   const cw=cicloWeek();
   return `<section class="card group plan has-climber">${CLAY('dominada','Personaje en dominada','climber')}
-    <div class="plan-h"><div><p class="eyebrow">Sesión de hoy · ${p.mins} min</p><h2>${esc(isKb()&&p.kbName||p.name)}</h2></div>
-      <button type="button" class="mini" data-act="sess" data-v="">Cambiar</button></div>
-    <div class="mode-t" role="group" aria-label="Material"><button type="button" data-act="mode" data-v="bar" aria-pressed="${!isKb()}">Barra</button><button type="button" data-act="mode" data-v="kb" aria-pressed="${isKb()}">Kettlebell</button></div>
+    <div class="plan-h"><div><p class="eyebrow">Sesión de hoy · ${p.mins} min</p><h2>${esc(k==='esp'?p.name:(isKb()&&p.kbName||p.name))}</h2></div>
+      <div class="plan-actions">${k==='esp'?`<button type="button" class="mini" data-act="especial">Quitar</button>`:''}<button type="button" class="mini" data-act="sess" data-v="">Cambiar</button></div></div>
+    ${k==='esp'?`<div class="esp-lead"><p><b>Para qué es.</b> La grasa de la tripa baja con trabajo de todo el cuerpo, no con mil abdominales. Los swings hacen ese trabajo. Después va el abdomen, directo, y al final un poco de brazos.</p><p><b>Sola.</b> Para si hay un dolor agudo en la lumbar, el cuello o el hombro. La espalda no se redondea. Esta rutina no lleva molino ni get-up con la pesa arriba: eso, mejor con alguien al lado.</p><p><b>El peso.</b> Cada ejercicio trae uno de partida (la sentadilla, 22 kg). Si solo tienes una kettlebell más pesada, haz menos repeticiones. Para cambiarlo, toca el nombre.</p></div>`:`<div class="mode-t" role="group" aria-label="Material"><button type="button" data-act="mode" data-v="bar" aria-pressed="${!isKb()}">Barra</button><button type="button" data-act="mode" data-v="kb" aria-pressed="${isKb()}">Kettlebell</button></div>`}
     ${k==='d1'?`<p class="cycle num">Semana ${cw} de 5 · ${CICLO_TXT[cw-1]}</p>`:''}
     ${p.climb?`<button type="button" class="climb-t" data-act="climb" aria-pressed="${!!w?.climb}">${w?.climb?ic('check'):''}Escalo hoy: solo bloques B y D</button>`:''}
     <ol class="plan-list">${items.map(([id,v,n0,reps,rest,note,b])=>{
@@ -777,12 +890,14 @@ function vPlan(sets){
       const pf=prefill(id,v);
       const head=b&&b!==blk?`<li class="blk">${blk=b}</li>`:'';
       const cap=done<n&&e.load&&pf.kg==null?'<span class="tick-kg">Falta el peso: toca el nombre</span>':'';
-      return `${head}<li class="pl-row${done>=n?' done':''}"><button type="button" class="pl" data-act="add" data-ex="${id}" data-v="${v}">
-        <span class="thumb sm">${art(id,v)}</span>
-        <span class="pl-t"><b>${esc(e.name)}</b><small class="num">${n} × ${esc(String(reps))}${e.vars.length>1?` · ${esc(e.vars[v]||'')}`:''}${rest?` · ${restTxt(rest)}`:''}</small>${note?`<em>${esc(note)}</em>`:''}</span></button>
+      const presc=`<b>${esc(e.name)}</b><small class="num">${n} × ${esc(String(reps))}${e.vars.length>1?` · ${esc(e.vars[v]||'')}`:''}${e.kg!=null?` · ${e.kg} kg`:''}${rest?` · ${restTxt(rest)}`:''}</small>${note?`<em>${esc(note)}</em>`:''}${e.esp?'<em class="how">Toca el dibujo: cómo se hace</em>':''}`;
+      const row=e.esp
+        ? `<div class="pl"><button type="button" class="thumb sm" data-act="ex" data-ex="${id}" aria-label="Cómo hacer ${esc(e.name)}">${art(id,v)}</button><button type="button" class="pl-t" data-act="add" data-ex="${id}" data-v="${v}">${presc}</button></div>`
+        : `<button type="button" class="pl" data-act="add" data-ex="${id}" data-v="${v}"><span class="thumb sm">${art(id,v)}</span><span class="pl-t">${presc}</span></button>`;
+      return `${head}<li class="pl-row${done>=n?' done':''}">${row}
         <div class="ticks" role="group" aria-label="Series de ${esc(e.name)}">${ticksFor(id,v,n,sets)}</div>${cap}</li>`;
     }).join('')}</ol>
-    <p class="warm">Cada recuadro es una serie, de la primera a la última. Tócalo para poner el tilde con esa cantidad; tócalo otra vez para quitarlo. Si la cantidad es otra, toca el nombre.</p>
+    <p class="warm">${k==='esp'?'Toca el recuadro para el tilde y otra vez para quitarlo. El dibujo explica el ejercicio. El nombre cambia la cantidad.':'Cada recuadro es una serie, de la primera a la última. Tócalo para poner el tilde con esa cantidad; tócalo otra vez para quitarlo. Si la cantidad es otra, toca el nombre.'}</p>
     <p class="warm">Hipopresivos en ayunas al levantarte. Estiramientos largos después de la fuerza, no antes.</p></section>`;
 }
 const HIPO=['Brazos hacia atrás, pecho abierto, crecer hacia el techo','Brazos delante de la cara, escápulas separadas, tronco apenas inclinado',
@@ -848,11 +963,16 @@ function vEjercicio(){
   const cv=curVariant(e.id),lf=lastFor(e.id,'9999'),dv=ui.dv??cv;
   const inPlan=[];
   Object.entries(PLAN).forEach(([key,p])=>{planItems(key,null).forEach(i=>{if(i[0]===e.id) inPlan.push(`${isKb()&&p.kbName||p.name}: ${i[2]} × ${i[3]}`)})});
-  return `<button type="button" class="back" data-act="tab" data-v="ejercicios">${ic('back')}Ejercicios</button>
+  const tch=e.teach;
+  return `<button type="button" class="back" data-act="${e.esp?'back':'tab'}" ${e.esp?'':`data-v="ejercicios"`}>${ic('back')}${e.esp?'Volver a la rutina':'Ejercicios'}</button>
   <div class="hero-pic">${art(e.id,dv)}</div>
   <section class="head" style="padding-top:0"><h1 class="display" style="font-size:40px">${esc(e.name)}</h1>
     <div class="meta">${metaTags(e).map(t=>`<span class="tag">${t}</span>`).join('')}<span class="tag" style="background:var(--bg)">${esc(e.muscles)}</span></div></section>
   <p class="cue">${esc(e.cue)}</p>
+  ${tch?`<section class="card"><h2>Cómo se hace</h2><ol class="steps">${tch.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol>
+    <h2>Fíjate en</h2><ul class="cues">${tch.cues.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>
+    <h2>Errores frecuentes</h2><ul class="miss">${tch.mistakes.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>
+    <p class="safe"><b>Seguridad.</b> ${esc(tch.safe)}</p></section>`:''}
   ${inPlan.length?`<section class="card"><h2>En la rutina</h2><div class="pill-row">${inPlan.map(t=>`<span class="pill num">${esc(t)}</span>`).join('')}</div></section>`:''}
   ${e.vars.length>1?`<section class="card"><h2 style="margin-bottom:10px">Progresión</h2><ol class="prog">${e.vars.map((v,i)=>{const c=i<cv?'done':i===cv?'cur':'next';
     return `<li class="${c}${i===dv?' sel':''}" data-act="dv" data-v="${i}" tabindex="0" role="button" aria-pressed="${i===dv}"><span class="dot">${c==='done'?ic('check'):''}</span><span class="vn">${esc(v)}</span>${c==='cur'?'<span class="here">Estás aquí</span>':'<span></span>'}</li>`}).join('')}</ol></section>`:''}
@@ -984,7 +1104,8 @@ function prefill(id,pv){
   const lf=lastFor(id), b=lf&&best(lf.sets), planned=dose(id);
   if(b) return {v:pv??b.v??0,val:clampVal(b.val),kg:b.kg??null};
   const fallback=planned&&planned.target!=null?planned.target:(e&&DEF[e.type])||10;
-  return {v:pv??0,val:clampVal(fallback),kg:null};
+  const kg0=e&&e.load&&e.kg!=null?e.kg:null;
+  return {v:pv??0,val:clampVal(fallback),kg:kg0};
 }
 function openSheet(id,edit,pv,date){
   const when=date||todayISO();
@@ -1150,6 +1271,11 @@ document.addEventListener('click',ev=>{
     case 'pt': ui.pt=+el.dataset.i; render(); break;
     case 'dv': ui.dv=+el.dataset.v; render(); break;
     case 'sess':{const w=ensureToday();w.sess=el.dataset.v||null;if(!save())break;render({top:true});break}
+    case 'especial':{const was=!!db.especial;const w0=todayW();const prevSess=w0?w0.sess:null;db.especial=was?0:1;
+      const w=db.especial?ensureToday():w0;if(db.especial)w.sess='esp';else if(w&&w.sess==='esp')w.sess=null;
+      if(!save()){db.especial=was?1:0;if(w)w.sess=prevSess;break}
+      render({top:true});toast(db.especial?'Rutina especial activada':'Rutina quitada. Lo anotado sigue en el historial',2800);break}
+    case 'back': history.back(); break;
     case 'mode':{db.mode=el.dataset.v==='kb'?'kb':'bar';if(!save())break;render();toast(db.mode==='kb'?'Modo kettlebell':'Modo barra');break}
     case 'untick':{const w=todayW();if(!w||!removeSet(w,+el.dataset.i))break;render();toast('Serie desmarcada',4000,true);break}
     case 'quick':{
