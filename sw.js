@@ -1,5 +1,5 @@
 /* Red de primero: con conexión se usa lo nuevo; sin ella, la última copia. */
-const CACHE = 'barra-v4';
+const CACHE = 'barra-v5';
 
 self.addEventListener('install', () => { self.skipWaiting(); });
 
